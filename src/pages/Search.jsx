@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCourses, sortCourses } from "../Redux/action-types";
 import Pagination from "../components/Pagination";
 import { GET_COURSES_SUCCESS, noOfItemsPerPage, url } from "../Redux/action";
+import Loading from "../components/Loading";
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -67,8 +68,8 @@ const Search = () => {
   };
   return (
     <>
-      {/* <p>{JSON.stringify(filters)}</p> */}
-      {isLoading && <h1>Loading</h1>}
+      {/* <p>{JSON.stringify(isLoading)}</p> */}
+      {/* {isLoading && <h1>Loading</h1>} */}
       <form onSubmit={handleSubmit}>
         <div id="searchInputDiv">
           <input
@@ -133,26 +134,32 @@ const Search = () => {
             <label className="filterLabel">Engineering</label>
           </div>
         </div>
-        <div id="courses">
-          {search
-            ? paginatedData.map((course, index) => {
-                return <CourseFWCard key={index} course={course} />;
-              })
-            : paginatedData &&
-              paginatedData.map((course, index) => {
-                return <CourseFWCard key={index} course={course} />;
-              })}
-
-          <div className="pagination">
-            {/* <h1>hdbshbd</h1> */}
-            {paginatedData && (
-              <Pagination
-                getPaginatedData={getPaginatedData}
-                pages={Math.ceil(courses.length / noOfItemsPerPage)}
-              />
-            )}
+        {isLoading ? (
+          <div id="coursesLoading">
+            <Loading />
           </div>
-        </div>
+        ) : (
+          <div id="courses">
+            {search
+              ? paginatedData.map((course, index) => {
+                  return <CourseFWCard key={index} course={course} />;
+                })
+              : paginatedData &&
+                paginatedData.map((course, index) => {
+                  return <CourseFWCard key={index} course={course} />;
+                })}
+
+            <div className="pagination">
+              {/* <h1>hdbshbd</h1> */}
+              {paginatedData && (
+                <Pagination
+                  getPaginatedData={getPaginatedData}
+                  pages={Math.ceil(courses.length / noOfItemsPerPage)}
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
